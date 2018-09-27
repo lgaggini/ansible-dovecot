@@ -1,0 +1,26 @@
+---
+# dovecot packages to be installed
+dovecot_packages:
+  - dovecot-core
+  - dovecot-imapd
+  - dovecot-managesieved
+
+# dovecot vuser
+dovecot_vuser: vmail
+dovecot_vgroup: vmail
+
+# dovecot home
+dovecot_home: /srv/mail
+
+# dovecot mail location and type
+dovecot_mail_location: maildir:~/Maildir:INBOX=~/Maildir/inbox:LAYOUT=fs
+
+# dovecots ssl configuration
+dovecot_ssl: required
+dovecot_ssl_cert: /etc/dovecot/private/dovecot.pem
+dovecot_ssl_key: /etc/dovecot/private/dovecot.key
+
+# dovecot users auth
+dovecot_users:
+  - name: lg
+    password: "{SHA512-CRYPT}$6$mgeaU71DighWvfKG$jK9dnTPRCvJ952YO6NEB.eHR/foonfBd.s95CVC/WYKCcnqxQpwgcWBv2zlfLeAPIoReKJa/LLpHnIQSpTXhS."

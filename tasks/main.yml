@@ -1,0 +1,37 @@
+---
+- name: dovecot | install dovecot packages
+  apt: name={{ item }} state=latest 
+  with_items: "{{ dovecot_packages }}"
+
+- name: dovecot | create vmail group
+  group: name={{ dovecot_vgroup }} state=present
+
+- name: dovecot | create vmail user
+  user: name={{ dovecot_vuser }} group={{ dovecot_vgroup }} home={{ dovecot_home }} state=present
+
+- name: dovecot | set vmail user home ownership
+  file: path={{ dovecot_home }} owner={{ dovecot_vuser }} group={{ dovecot_vgroup }}
+
+- name: dovecot | configure tls/ssl
+  template: src=10-ssl.conf.j2 dest=/etc/dovecot/conf.d/10-ssl.conf owner=root group=root mode=0644
+  notify: restart dovecot
+
+- name: dovecot | configure mail location
+  template: src=10-mail.conf.j2 dest=/etc/dovecot/conf.d/10-mail.conf owner=root group=root mode=0644
+  notify: restart dovecot
+
+- name: dovecot | configure mixed passwd static auth
+  template: src=auth-passwdfile-userstatic.conf.ext.j2 dest=/etc/dovecot/conf.d/auth-passwdfile-userstatic.conf.ext owner=root group=root mode=0644
+  notify: restart dovecot
+
+- name: dovecot | configure mixed passwd static auth
+  copy: src=10-auth.conf dest=/etc/dovecot/conf.d/10-auth.conf owner=root group=root mode=0644
+  notify: restart dovecot
+
+- name: dovecot | create users
+  template: src=users.j2 dest=/etc/dovecot/users owner=root group=root mode=0644
+  notify: restart dovecot
+
+- name: dovecot | enable sasl auth service
+  copy: src=10-master.conf dest=/etc/dovecot/conf.d/10-master.conf owner=root group=root mode=0644
+  notify: restart dovecot

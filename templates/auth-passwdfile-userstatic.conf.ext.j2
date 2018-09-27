@@ -1,0 +1,9 @@
+passdb {
+  driver = passwd-file
+  args = scheme=CRYPT username_format=%u /etc/dovecot/users
+}
+
+userdb {
+  driver = static
+  args = uid={{ dovecot_vuser }} gid={{ dovecot_vgroup }} home={{ dovecot_home }}
+}
