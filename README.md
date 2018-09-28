@@ -1,4 +1,4 @@
-# ansible-getmail
+# ansible-dovecot
 
 ansible-dovecot is an Ansible role to install and configure dovecot on a debian based OS.
 
