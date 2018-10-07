@@ -24,6 +24,35 @@
   template: src=auth-passwdfile-userstatic.conf.ext.j2 dest=/etc/dovecot/conf.d/auth-passwdfile-userstatic.conf.ext owner=root group=root mode=0644
   notify: restart dovecot
 
+- name: dovecot | configure managesieve
+  copy: src=20-managesieve.conf dest=/etc/dovecot/conf.d/20-managesieve.conf owner=root group=root mode=0644
+  notify: restart dovecot
+
+- name: dovecot | configure spam / ham learn
+  copy: src=90-sieve.conf dest=/etc/dovecot/conf.d/90-sieve.conf owner=root group=root mode=0644
+  notify: restart dovecot
+
+- name: dovecot | configure spam / ham learn
+  copy: src=20-imap.conf dest=/etc/dovecot/conf.d/20-imap.conf owner=root group=root mode=0644
+  notify: restart dovecot
+
+- name: dovecot | create /usr/lib/dovecot/sieve
+  file: path=/usr/lib/dovecot/sieve state=directory owner=root group=root mode=0644
+
+- name: dovecot | copy sieve scripts
+  copy: src=report-spam.sieve dest=/usr/lib/dovecot/sieve/report-spam.sieve owner=root group=root mode=0644
+  notify: compile sieve
+
+- name: dovecot | copy sieve scripts
+  copy: src=report-ham.sieve dest=/usr/lib/dovecot/sieve/report-ham.sieve owner=root group=root mode=0644
+  notify: compile sieve
+
+- name: dovecot | copy sieve <-> rspamc scripts
+  copy: src=rspamc-learn-ham.sh dest=/usr/lib/dovecot/sieve/rspamc-learn-ham.sh owner=root group=root mode=0755
+
+- name: dovecot | copy sieve <-> rspamc scripts
+  copy: src=rspamc-learn-spam.sh dest=/usr/lib/dovecot/sieve/rspamc-learn-spam.sh owner=root group=root mode=0755
+
 - name: dovecot | configure mixed passwd static auth
   copy: src=10-auth.conf dest=/etc/dovecot/conf.d/10-auth.conf owner=root group=root mode=0644
   notify: restart dovecot

@@ -1,3 +1,6 @@
 ---
 - name: restart dovecot
   systemd: name=dovecot state=restarted enabled=yes
+
+- name: compile sieve
+  shell: "sievec /usr/lib/dovecot/sieve/*"
